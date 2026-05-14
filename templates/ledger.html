@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Entry</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Segoe UI;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        input, select {
+            padding: 8px;
+            border-radius: 8px;
+            border: none;
+            font-size: 13px;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .add {
+            background: white;
+            color: #333;
+        }
+
+        .table {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        tr:not(:last-child) {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .delete {
+            background: none;
+            border: none;
+            color: #ff6b6b;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .filter {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Ledger</h2>
+            <a href="/dashboard">
+                <button class="btn add">← Back</button>
+            </a>
+        </div>
+
+        <form method="POST" action="/add_entry">
+            <div class="form-row">
+                <input type="number" name="amount" placeholder="₹ Amount" required>
+
+                <select name="category">
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+                </select>
+
+                <input type="text" name="description" placeholder="Description">
+
+                <input type="date" name="date" required>
+
+                <button class="btn add">Add</button>
+            </div>
+        </form>
+
+        <form method="GET" class="filter">
+            <div class="form-row">
+                <input type="date" name="start">
+                <input type="date" name="end">
+                <button class="btn add">Filter</button>
+            </div>
+        </form>
+
+        <div class="table">
+            <table>
+                <tr>
+                    <th>Amount</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th></th>
+                </tr>
+
+                {% for entry in entries %}
+                <tr>
+                    <td>₹{{ entry.amount }}</td>
+                    <td>{{ entry.category }}</td>
+                    <td>{{ entry.description }}</td>
+                    <td>{{ entry.date }}</td>
+                    <td>
+                        <a href="/delete/{{ loop.index0 }}">
+                            <button class="delete">🗑</button>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</body>
+</html>
